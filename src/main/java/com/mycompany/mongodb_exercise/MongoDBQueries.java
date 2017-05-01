@@ -44,12 +44,12 @@ public class MongoDBQueries {
                 new Document("$project", new Document("_id", 0).append("count", 1)) // Returns, with the append specifying the inclusion of the field "count" in the return result.
         ));
 
-        int count = 0;
+        int numberOfUsersInDatabase = 0;
         for (Document dbObject : output) {
-            count = (int) dbObject.get("count");
+            numberOfUsersInDatabase = (int) dbObject.get("count");
         }
         
-        return count;
+        return numberOfUsersInDatabase;
     }
 
     // Which Twitter users link the most to other Twitter users? (Provide the top ten.) 
