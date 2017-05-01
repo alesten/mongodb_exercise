@@ -30,8 +30,7 @@ public class Main {
         int count = 1;
 
         for (Object object : activeList) {
-            System.out.println(count++  + ": " +  object.toString());
+            System.out.println(count++ + ": " + object.toString());
         }
-
     }
 }
