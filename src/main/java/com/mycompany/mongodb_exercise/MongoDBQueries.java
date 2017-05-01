@@ -39,36 +39,33 @@ public class MongoDBQueries {
     // How many users are there in our database?
     public int getNumberOfUsersInDatabase() {
         AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
-                new Document("$group", new Document("_id", "$user")), // Gathers a group of all users.
-                new Document("$group", new Document("_id", null).append("count", new Document("$sum", 1))), // Calculates sum for the already-retrieved group of users, putting the result of $sum into the variable "count".
+                new Document("$group", new Document("_id", "$user")), // Collects a group of all users.
+                new Document("$group", new Document("_id", null).append("count", new Document("$sum", 1))), // Calculating the sum for the retrieved group of users from the previous line, putting the result of $sum into a variable called "count".
                 new Document("$project", new Document("_id", 0).append("count", 1)) // Returns, with the append specifying the inclusion of the field "count" in the return result.
         ));
 
         int count = 0;
-
         for (Document dbObject : output) {
-
             count = (int) dbObject.get("count");
         }
+        
         return count;
     }
 
     // Which Twitter users link the most to other Twitter users? (Provide the top ten.) 
     public List<Object> getTopTenActiveUsers() {
         AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
-                // "user","$user" means that we're creating variables "user", and inserting variables from every user by saying $user.
-                // Could, for example, write '22' and we would create 'user' variables only for user 22.
+                // "user","$user" meaning that we are creating a variable called "user", and then we are inserting variables from every user by saying $user.
+                // We could, for example, write '11' and we would create 'user' variables only for user number 11.
                 new Document("$group", new Document("_id", new Document("user", "$user").append("tweet_id", "$id"))), // Get sets of every user and tweet association.
                 new Document("$group", new Document("_id", "$_id.user").append("tweet_count", new Document("$sum", 1))), // Get the sum of every occurence of a unique user id.
-                new Document("$project", new Document("_id", 0).append("user", "$_id").append("tweet_count", 1)), // Cuts off unnecessary data, leaving only the users and their tweet counts.
+                new Document("$project", new Document("_id", 0).append("user", "$_id").append("tweet_count", 1)), // Cuts off unnecessary data, leaving us with only the users and their tweet counts.
                 new Document("$sort", new Document("tweet_count", -1)), //-1 sorts in descending order.
-                new Document("$limit", 10) // Get the top 10.
+                new Document("$limit", 10) // Get the top 10 users.
         )).allowDiskUse(Boolean.TRUE);
 
         List<Object> topTenActiveUsers = new ArrayList<>();
-
         for (Document dbObject : output) {
-
             topTenActiveUsers.add(dbObject.get("user") + ", " + dbObject.get("tweet_count"));
         }
 
@@ -87,7 +84,6 @@ public class MongoDBQueries {
         )).allowDiskUse(Boolean.TRUE);
 
         List<Object> topTenLinkedUsers = new ArrayList<>();
-
         for (Document dbObject : output) {
             topTenLinkedUsers.add(dbObject.get("user") + ", " + dbObject.get("tweet_count"));
         }
