@@ -5,14 +5,7 @@
  */
 package com.mycompany.mongodb_exercise;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import java.util.ArrayList;
-import java.util.Arrays;
-import org.bson.BsonValue;
-import org.bson.Document;
+import java.util.List;
 
 /**
  *
@@ -21,48 +14,24 @@ import org.bson.Document;
 public class Main {
 
     public static void main(String[] args) {
-        ArrayList<Document> s = getTopMentioner(10);
+        //You might have to change your port back to 27017 - since i use another port on my machine :)
+        MongoDBQueries mdb = new MongoDBQueries("mongodb://localhost:27018", "social_net", "tweets");
+
+        System.out.println("\nNumber of Twitter accounts\n" + mdb.getNumberOfUsersInDatabase());
+        System.out.println("\nMost active users");
+        printList(mdb.getTopTenActiveUsers());
+        System.out.println("\nPeople that @mention others most");
+        printList(mdb.getTopTenLinkedUsers());
+    }
+
+    private static void printList(List<Object> list) {
+
+        List<Object> activeList = list;
         int count = 1;
-        for (Document doc : s) {
-            System.out.println(count++ + ": " + doc.getString("_id") + " with " + doc.getInteger("tweeted") + " tweets");
+
+        for (Object object : activeList) {
+            System.out.println(count++  + ": " +  object.toString());
         }
-        //System.out.println("User Count: " + getUserCount());
-    }
-    
-    private static ArrayList<Document> getTopMentioner(int limit){
-        MongoClientURI connStr = new MongoClientURI("mongodb://localhost:27017");
-        MongoClient mongoClient = new MongoClient(connStr);
 
-        MongoDatabase db = mongoClient.getDatabase("social_net");
-        MongoCollection<Document> col = db.getCollection("tweets");
-        
-        ArrayList<Document> stuff = col.aggregate(Arrays.asList(
-            new Document("$match", new Document("text", new Document("$regex", ".*@.*"))),
-            new Document("$group", new Document("_id", new Document("user", "$user").append("tweetId", "$id"))),
-            new Document("$group", new Document("_id", "$_id.user").append("tweeted", new Document("$sum", 1))),
-            new Document("$sort", new Document("tweeted", -1)),
-            new Document("$limit", limit)
-        ), Document.class).into(new ArrayList<>());
-        
-        
-        //db.tweets.aggregate([{$match: {"text": {$regex: ".*@.*"}}}, 
-            //{$group: {_id :{user: "$user", tweetId: "$id"}}}, 
-            //{$group: {_id: "$_id.user", tweeted: {$sum: 1}}}, 
-            //{$sort: {tweeted: -1}}, 
-            //{$limit: 10}])
-        return stuff;
-    }
-    
-    private static long getUserCount() {
-        MongoClientURI connStr = new MongoClientURI("mongodb://localhost:27017");
-        MongoClient mongoClient = new MongoClient(connStr);
-
-        MongoDatabase db = mongoClient.getDatabase("social_net");
-        MongoCollection<Document> col = db.getCollection("tweets");
-        
-        ArrayList<BsonValue> dis = col.distinct("user", BsonValue.class)
-                .into(new ArrayList<>());
-        
-        return dis.size();
     }
 }
