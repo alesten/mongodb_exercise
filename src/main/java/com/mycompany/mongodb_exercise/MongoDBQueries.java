@@ -90,4 +90,18 @@ public class MongoDBQueries {
 
         return topTenLinkedUsers;
     }
+
+    public List<Object> getMostMentionedUsers() {        
+        AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
+                new Document("$match", new Document("text", "/@\\w+\\/")),
+                new Document("$group", new Document("_id", null).append("text", new Document("$push", "$text")))
+        )).allowDiskUse(Boolean.TRUE);
+        
+        List<Object> mentionedUsers = new ArrayList<>();
+        for(Document doc : output) {
+            mentionedUsers.add(doc.get("user") + ", " + doc.get("tweet_count"));
+        }
+        
+        return mentionedUsers;
+    }
 }
