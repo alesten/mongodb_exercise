@@ -26,3 +26,17 @@
 8. Karen230683, 216
 9. keza34, 211
 10. DarkPiano, 202
+
+### Top happy users
+1. Wingman29, 4
+2. becca210, 4
+3. _EmilyYoung, 4
+4. katarinka, 4
+5. ersle, 4
+
+### Top grumpy users
+1. ElleCTF, 0
+2. Karoli, 0
+3. scotthamilton, 0
+4. _TheSpecialOne_, 0
+5. mattycus, 0
