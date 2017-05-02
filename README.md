@@ -85,6 +85,6 @@ In the mongo database we want to give our database a name, we call it social_net
 
 use social_net
 
-To be sure the data have been inserted we want to find and count the number of tweets, we have used the following command the do that: 
+To be sure the data have been inserted we want to find and count the number of tweets, we have used the following command to do that: 
 
 Db.tweets.find().count()
