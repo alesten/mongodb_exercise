@@ -48,7 +48,7 @@ public class MongoDBQueries {
         for (Document dbObject : output) {
             numberOfUsersInDatabase = (int) dbObject.get("count");
         }
-        
+
         return numberOfUsersInDatabase;
     }
 
@@ -91,17 +91,53 @@ public class MongoDBQueries {
         return topTenLinkedUsers;
     }
 
-    public List<Object> getMostMentionedUsers() {        
+    public List<Object> getHappyUsers() {
+        AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
+                new Document("$project", new Document("_id", 0).append("user", "$_id").append("polarity", 1).append("user", 1)),
+                new Document("$sort", new Document("polarity", -1)),
+                new Document("$limit", 5)
+        )).allowDiskUse(Boolean.TRUE);
+
+        List<Object> topHappyUsers = new ArrayList<>();
+        for (Document dbObject : output) {
+            topHappyUsers.add(dbObject.get("user") + ", " + dbObject.get("polarity"));
+        }
+
+        return topHappyUsers;
+    }
+
+    public List<Object> getGrumpyUsers() {
+        AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
+                new Document("$project", new Document("_id", 0).append("user", "$_id").append("polarity", 1).append("user", 1)),
+                new Document("$sort", new Document("polarity", 1)),
+                new Document("$limit", 5)
+        )).allowDiskUse(Boolean.TRUE);
+
+        List<Object> topHappyUsers = new ArrayList<>();
+        for (Document dbObject : output) {
+            topHappyUsers.add(dbObject.get("user") + ", " + dbObject.get("polarity"));
+        }
+
+        return topHappyUsers;
+    }
+
+    public List<Object> getMostMentionedUsers() {
         AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
                 new Document("$match", new Document("text", "/@\\w+\\/")),
-                new Document("$group", new Document("_id", null).append("text", new Document("$push", "$text")))
+                new Document("$project", new Document("$split", new Document("$text", " "))), // added
+                new Document("$unwind", "$text"), // added
+                new Document("$match", new Document("text", "/@\\w+\\/")), // added
+                new Document("$group", new Document("_id", "$text").append("tweet_count", new Document("$sum", 1))), // added/changed
+                new Document("$sort", new Document("tweet_count", -1)), // added
+                new Document("$limit", 5)
         )).allowDiskUse(Boolean.TRUE);
-        
+
         List<Object> mentionedUsers = new ArrayList<>();
-        for(Document doc : output) {
+        for (Document doc : output) {
             mentionedUsers.add(doc.get("user") + ", " + doc.get("tweet_count"));
         }
-        
+
         return mentionedUsers;
     }
+
 }
