@@ -32,6 +32,7 @@ public class Main {
 
     /**
      * Helper method to print out results in a nice way.
+     *
      * @param list of results to print
      */
     private static void printList(List<Object> list) {
