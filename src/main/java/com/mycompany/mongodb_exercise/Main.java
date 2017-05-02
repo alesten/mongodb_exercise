@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
         //You might have to change your port back to 27017 - since i use another port on my machine :)
-        MongoDBQueries mdb = new MongoDBQueries("mongodb://localhost:27018", "social_net", "tweets");
+        MongoDBQueries mdb = new MongoDBQueries("mongodb://localhost:27017", "social_net", "tweets");
 
         System.out.println("\nNumber of Twitter accounts\n" + mdb.getNumberOfUsersInDatabase());
         System.out.println("\nMost active users");
