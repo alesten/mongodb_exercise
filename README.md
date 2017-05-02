@@ -42,3 +42,49 @@ This document contains both the result and how we did to get the data up and run
 3. scotthamilton, 0
 4. _TheSpecialOne_, 0
 5. mattycus, 0
+
+## How we did:
+
+Navigate to virtual machine: 
+
+cd …/db_course_nosql/vm
+
+Start the virtual machine by the following command: 
+
+Vagrant up
+
+Connect to the virtual machine by the following command: 
+
+Vagrant ssh
+
+Now we have to download a dataset of Twitter tweets from http://help.sentiment140.com/for-students/ we done that by the following command: 
+
+wget http://cs.stanford.edu/people/alecmgo/trainingandtestdata.zip
+
+We install the VM unzip package, because it is not installed by default. We install it by the following command: 
+
+sudo apt-get install unzip
+
+We uncompress the twitter dataset by the following command:
+
+unzip trainingandtestdata.zip
+
+To make use of the --headerline switch when importing the data with mongo import, we add a headerline accordingly:
+
+sed -i '1s;^;polarity,id,date,query,user,text\n;' training.1600000.processed.noemoticon.csv
+
+To import the data into the mongo database we use the mongoDB CLI import tool. 
+
+mongoimport --drop --db social_net --collection tweets --type csv --headerline --file training.1600000.processed.noemoticon.csv
+
+Now we want to use enter the mongo database, we do that be the following command: 
+
+Mongo
+
+In the mongo database we want to give our database a name, we call it social_net, by the following command:
+
+use social_net
+
+To be sure the data have been inserted we want to find and count the number of tweets, we have used the following command the do that: 
+
+Db.tweets.find().count()
