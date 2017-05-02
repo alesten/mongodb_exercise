@@ -24,6 +24,7 @@ public class MongoDBQueries {
     private String clientURI;
     private String dbName;
     private String collectionName;
+    private MongoDatabase db;
     MongoCollection<Document> collection;
 
     public MongoDBQueries(String clientURI, String dbName, String collectionName) {
@@ -32,7 +33,7 @@ public class MongoDBQueries {
         this.collectionName = collectionName;
         MongoClientURI connStr = new MongoClientURI(clientURI);
         MongoClient mongoClient = new MongoClient(connStr);
-        MongoDatabase db = mongoClient.getDatabase(dbName);
+        db = mongoClient.getDatabase(dbName);
         collection = db.getCollection(collectionName);
     }
 
@@ -122,24 +123,25 @@ public class MongoDBQueries {
 
         return topHappyUsers;
     }
-    // Who is are the most mentioned Twitter users? (Provide the top five.)
-    public List<Object> getMostMentionedUsers() {
-        AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
-                new Document("$match", new Document("text", "/@\\w+\\/")),
-                new Document("$project", new Document("$split", new Document("$text", " "))), // added
-                new Document("$unwind", "$text"), // added
-                new Document("$match", new Document("text", "/@\\w+\\/")), // added
-                new Document("$group", new Document("_id", "$text").append("tweet_count", new Document("$sum", 1))), // added/changed
-                new Document("$sort", new Document("tweet_count", -1)), // added
+
+    // Who are the most mentioned Twitter users? (Provide top five.)
+    public List<Object> getMostMentionedUsers() throws Exception {
+        MongoCollection<Document> mentionCollection = db.getCollection("most_mentioned");
+
+        AggregateIterable<Document> output = mentionCollection.aggregate(Arrays.asList(
+                new Document("$sort", new Document("value", -1)),
                 new Document("$limit", 5)
         )).allowDiskUse(Boolean.TRUE);
 
-        List<Object> mentionedUsers = new ArrayList<>();
-        for (Document doc : output) {
-            mentionedUsers.add(doc.get("user") + ", " + doc.get("tweet_count"));
+        List<Object> topFiveMentionedUsers = new ArrayList<>();
+
+        for (Document dbObject : output) {
+
+            topFiveMentionedUsers.add(dbObject.get("_id") + ", " + dbObject.get("value"));
+
         }
 
-        return mentionedUsers;
+        return topFiveMentionedUsers;
     }
 
 }

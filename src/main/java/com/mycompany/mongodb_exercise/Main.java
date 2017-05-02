@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         //You might have to change your port back to 27017 - since i use another port on my machine :)
         MongoDBQueries mdb = new MongoDBQueries("mongodb://localhost:27017", "social_net", "tweets");
 
@@ -26,7 +26,8 @@ public class Main {
         printList(mdb.getHappyUsers());
         System.out.println("\nTop Grumpy users");
         printList(mdb.getGrumpyUsers());
-//        printList(mdb.getMostMentionedUsers());
+        System.out.println("\nTop Mentioned users");
+        printList(mdb.getMostMentionedUsers());
     }
 
     private static void printList(List<Object> list) {
