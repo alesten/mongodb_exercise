@@ -45,6 +45,13 @@ This document contains both the result and how we did to get the data up and run
 4. _TheSpecialOne_, 0
 5. mattycus, 0
 
+### Top Mentioned users
+1. @mileycyrus, 4500.0
+2. @tommcfly, 3886.0
+3. @ddlovato, 3467.0
+4. @DavidArchie, 1298.0
+5. @Jonasbrothers, 1287.0
+
 ## How we did:
 
 Navigate to virtual machine: 
