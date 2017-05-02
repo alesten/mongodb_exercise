@@ -1,5 +1,7 @@
 # Result for Mongo Database Exercise
 
+This document contains both the result and how we did to get the data up and running on the VM
+
 ## Number of Twitter accounts
 1. 659178
 
