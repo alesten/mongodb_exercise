@@ -90,3 +90,7 @@ use social_net
 To be sure the data have been inserted we want to find and count the number of tweets, we have used the following command to do that: 
 
 Db.tweets.find().count()
+
+we execute the script written in most_mentioned.js in the mongo shell,
+to make it easier to find most mentioned users.
+The script creates a new collection containing the users.

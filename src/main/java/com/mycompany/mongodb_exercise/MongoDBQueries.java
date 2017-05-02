@@ -37,7 +37,11 @@ public class MongoDBQueries {
         collection = db.getCollection(collectionName);
     }
 
-    // How many users are there in our database?
+    /**
+     * How many users are there in our database?
+     *
+     * @return list of results
+     */
     public int getNumberOfUsersInDatabase() {
         AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
                 new Document("$group", new Document("_id", "$user")), // Collects a group of all users.
@@ -53,7 +57,12 @@ public class MongoDBQueries {
         return numberOfUsersInDatabase;
     }
 
-    // Which Twitter users link the most to other Twitter users? (Provide the top ten.) 
+    /**
+     * Which Twitter users link the most to other Twitter users? (Provide the
+     * top ten.)
+     *
+     * @return list of results
+     */
     public List<Object> getTopTenActiveUsers() {
         AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
                 // "user","$user" meaning that we are creating a variable called "user", and then we are inserting variables from every user by saying $user.
@@ -73,7 +82,11 @@ public class MongoDBQueries {
         return topTenActiveUsers;
     }
 
-    // Who are the most active users? (Provide top ten.)
+    /**
+     * Who are the most active users? (Provide top ten.)
+     *
+     * @return list of results
+     */
     public List<Object> getTopTenLinkedUsers() {
         AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
                 new Document("$match", new Document("text", new Document("$regex", ".*@.*"))),
@@ -92,7 +105,11 @@ public class MongoDBQueries {
         return topTenLinkedUsers;
     }
 
-    // Who are the most happy? (most positive tweets.)
+    /**
+     * Who are the most happy? (most positive tweets.)
+     *
+     * @return list of results
+     */
     public List<Object> getHappyUsers() {
         AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
                 new Document("$project", new Document("_id", 0).append("user", "$_id").append("polarity", 1).append("user", 1)),
@@ -108,7 +125,11 @@ public class MongoDBQueries {
         return topHappyUsers;
     }
 
-    // Who are the five most grumpy? (most negative tweets.)
+    /**
+     * Who are the five most grumpy? (most negative tweets.)
+     *
+     * @return list of results
+     */
     public List<Object> getGrumpyUsers() {
         AggregateIterable<Document> output = collection.aggregate(Arrays.asList(
                 new Document("$project", new Document("_id", 0).append("user", "$_id").append("polarity", 1).append("user", 1)),
@@ -124,8 +145,12 @@ public class MongoDBQueries {
         return topHappyUsers;
     }
 
-    // Who are the most mentioned Twitter users? (Provide top five.)
-    public List<Object> getMostMentionedUsers() throws Exception {
+    /**
+     * Who are the most mentioned Twitter users? (Provide top five.)
+     *
+     * @return list of results
+     */
+    public List<Object> getMostMentionedUsers() {
         MongoCollection<Document> mentionCollection = db.getCollection("most_mentioned");
 
         AggregateIterable<Document> output = mentionCollection.aggregate(Arrays.asList(
