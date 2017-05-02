@@ -79,11 +79,11 @@ To import the data into the mongo database we use the mongoDB CLI import tool.
 
 mongoimport --drop --db social_net --collection tweets --type csv --headerline --file training.1600000.processed.noemoticon.csv
 
-Now we want to use enter the mongo database, we do that be the following command: 
+Now we want to enter the mongo database, we do that by the following command: 
 
 Mongo
 
-In the mongo database we want to give our database a name, we call it social_net, by the following command:
+In the mongo database we want to use our social_net database, we do that by the following command:
 
 use social_net
 
