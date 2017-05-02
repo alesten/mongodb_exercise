@@ -2,7 +2,9 @@
 
 This document contains both the result and how we did to get the data up and running on the VM
 
-## Number of Twitter accounts
+## Results
+
+### Number of Twitter accounts
 1. 659178
 
 ### Most active users
