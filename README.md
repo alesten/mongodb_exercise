@@ -15,7 +15,7 @@ Most active users
 9: Karen230683, 238
 10: DarkPiano, 236
 
-People linked users
+Most linked users
 1: lost_dog, 549
 2: tweetpet, 310
 3: VioletsCRUK, 251
